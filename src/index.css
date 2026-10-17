@@ -1,13 +1,192 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+:root {
+  font-family: Inter, Arial, sans-serif;
+  color: #172b4d;
+  background: #f3f6fa;
+  font-synthesis: none;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+button, input {
+  font: inherit;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 22px max(5%, calc((100% - 1100px) / 2));
+  background: #0756a4;
+  color: white;
+}
+
+.marca {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.marca h1 {
+  font-size: 21px;
+  margin: 0;
+}
+
+.marca p {
+  font-size: 12px;
+  margin: 5px 0 0;
+}
+
+.selo {
+  font-size: 12px;
+  border: 1px solid #8dbbe8;
+  padding: 8px 12px;
+  border-radius: 20px;
+}
+
+.hero {
+  background: #0756a4;
+  color: white;
+  text-align: center;
+  padding: 44px 20px 60px;
+}
+
+.hero h2 {
+  font-size: clamp(26px, 5vw, 42px);
+  margin: 12px 0;
+}
+
+.hero p {
+  max-width: 620px;
+  margin: 12px auto;
+  line-height: 1.7;
+}
+
+.subtitulo {
+  color: #ffdc69;
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+
+.painel, .rodape-info {
+  max-width: 1000px;
+  margin: 28px auto;
+  padding: 28px;
+  background: white;
+  border-radius: 14px;
+  box-shadow: 0 4px 18px #132d4b0d;
+}
+
+.upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 38px 20px;
+  margin: 22px 0;
+  text-align: center;
+  border: 2px dashed #7da9d6;
+  border-radius: 12px;
+  color: #0756a4;
+  cursor: pointer;
+  background: #f7fbff;
+}
+
+.upload input {
+  display: none;
+}
+
+.cabecalho-lista, .documento {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.cabecalho-lista {
+  justify-content: space-between;
+  margin-top: 32px;
+}
+
+.documento {
+  padding: 16px 0;
+  border-bottom: 1px solid #e5eaf0;
+}
+
+.info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  overflow-wrap: anywhere;
+}
+
+.info span, .vazio {
+  color: #66758a;
+  font-size: 13px;
+}
+
+button {
+  cursor: pointer;
+  padding: 10px 13px;
+  border: 0;
+  border-radius: 7px;
+  background: #0756a4;
+  color: white;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+button.icone {
+  background: #eaf2fb;
+  color: #0756a4;
+}
+
+.rodape-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  color: #0756a4;
+}
+
+.rodape-info p {
+  color: #53647a;
+  line-height: 1.6;
+}
+
+@media (max-width: 650px) {
+  .topbar {
+    padding: 18px;
+  }
+
+  .selo {
+    display: none;
+  }
+
+  .painel, .rodape-info {
+    margin: 16px 12px;
+    padding: 18px;
+  }
+
+  .documento {
+    flex-wrap: wrap;
+  }
+
+  .info {
+    flex-basis: calc(100% - 50px);
+  }
+
+  .documento button:first-of-type {
+    margin-left: 40px;
+  }
 }
