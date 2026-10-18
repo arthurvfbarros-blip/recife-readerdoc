@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="32 32 448 448" width="448" height="448">
+  <defs>
+    <!-- Gradiente de Fundo Principal -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0a66c2" />
+      <stop offset="100%" stop-color="#04386b" />
+    </linearGradient>
+    <!-- Gradiente para Destaque da Planilha -->
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="100%" stop-color="#0284c7" />
+    </linearGradient>
+  </defs>
+
+  <!-- Fundo Arredondado (Base do Ícone) -->
+  <rect x="32" y="32" width="448" height="448" rx="96" fill="url(#bgGrad)" />
+
+  <!-- Formato da Folha de Documento com Dobra -->
+  <path d="M140 110 C140 96.7 150.7 86 164 86 H296 L372 162 V402 C372 415.3 361.3 426 348 426 H164 C150.7 426 140 415.3 140 402 Z" fill="#ffffff" />
+  <path d="M296 86 V162 H372 Z" fill="#cbd5e1" />
+
+  <!-- Grade de Planilha (Excel/Dados) -->
+  <rect x="180" y="210" width="152" height="150" rx="8" fill="#f8fafc" stroke="#94a3b8" stroke-width="6" />
+  
+  <!-- Linhas da Planilha -->
+  <line x1="180" y1="250" x2="332" y2="250" stroke="#0756a4" stroke-width="8" />
+  <line x1="180" y1="290" x2="332" y2="290" stroke="#cbd5e1" stroke-width="4" />
+  <line x1="180" y1="330" x2="332" y2="330" stroke="#cbd5e1" stroke-width="4" />
+  
+  <!-- Colunas da Planilha -->
+  <line x1="230" y1="210" x2="230" y2="360" stroke="#cbd5e1" stroke-width="4" />
+  <line x1="280" y1="210" x2="280" y2="360" stroke="#cbd5e1" stroke-width="4" />
+
+  <!-- Célula Destacada de Dados Extratados -->
+  <rect x="230" y="250" width="50" height="40" fill="url(#accentGrad)" rx="2" />
+</svg>

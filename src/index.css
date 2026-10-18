@@ -905,4 +905,13 @@ button.icone {
 }
 .drop-overlay-box strong { font-size: 20px; }
 .drop-overlay-box span { font-size: 14px; opacity: 0.75; }
+
+/* Logo ao lado do título */
+.marca-logo {
+  height: 48px;
+  width: 48px;
+  flex-shrink: 0;
+  border-radius: 22%;
+  box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.35); /* contorno sutil sobre o header azul */
+}
 }
