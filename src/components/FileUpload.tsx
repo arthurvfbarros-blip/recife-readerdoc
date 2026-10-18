@@ -15,7 +15,7 @@ export function FileUpload({ onFilesSelected }: FileUploadProps) {
     <label className="upload">
       <UploadCloud size={42} />
       <strong>Selecione seus documentos</strong>
-      <span>Ou toque aqui para procurar arquivos</span>
+      <span>Arraste e solte aqui, ou clique para procurar arquivos</span>
       <input
         type="file"
         accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png"

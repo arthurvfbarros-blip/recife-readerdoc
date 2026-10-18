@@ -1,5 +1,6 @@
+import { useFileDrop } from "./hooks/useFileDrop";
 import { useState } from "react";
-import { ShieldCheck } from "lucide-react";
+import { ShieldCheck, UploadCloud } from "lucide-react";
 import { Header } from "./components/Header";
 import { Hero } from "./components/Hero";
 import { FileUpload } from "./components/FileUpload";
@@ -26,10 +27,12 @@ export default function App() {
     exportarXLSX,
   } = useDocumentManager();
 
+  const arrastando = useFileDrop(adicionarArquivos, currentView === "home");
+
   // Req 1: Converte o documento e, ao terminar, navega para a tela de exportação
   async function handleConvert(doc) {
     const ok = await converter(doc);
-    if (ok) setCurrentView("export"); // só avança se a conversão deu certo
+    if (ok) setCurrentView("export"); // só avança se a conversão deu 
   }
 
   if (currentView === "export") {
@@ -65,6 +68,15 @@ export default function App() {
 
   return (
     <main className="app">
+      {arrastando && (
+  <div className="drop-overlay" role="status" aria-live="polite">
+    <div className="drop-overlay-box">
+      <UploadCloud size={56} />
+      <strong>Solte os arquivos aqui</strong>
+      <span>PDF, JPG ou PNG</span>
+    </div>
+  </div>
+      )}
       <Header />
       <Hero />
 
