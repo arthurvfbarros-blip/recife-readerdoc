@@ -28,8 +28,8 @@ export default function App() {
 
   // Req 1: Converte o documento e, ao terminar, navega para a tela de exportação
   async function handleConvert(doc) {
-    await converter(doc);
-    setCurrentView("export");
+    const ok = await converter(doc);
+    if (ok) setCurrentView("export"); // só avança se a conversão deu certo
   }
 
   if (currentView === "export") {
