@@ -1,10 +1,18 @@
 import { useState } from "react";
 import { Documento } from "../types/documento";
-import { converterImagemParaPdf, executarDownloadPdf } from "../services/pdfConverter";
+import {
+  converterImagemParaPdf,
+  executarDownloadPdf,
+  validarTodosDocumentos,
+  exportarComoCSV,
+  exportarComoJSON,
+  exportarComoXLSX,
+} from "../services";
 
 export function useDocumentManager() {
   const [documentos, setDocumentos] = useState<Documento[]>([]);
   const [carregandoId, setCarregandoId] = useState<string | null>(null);
+  const [validando, setValidando] = useState<boolean>(false);
 
   function adicionarArquivos(lista: FileList | null) {
     if (!lista) return;
@@ -70,12 +78,40 @@ export function useDocumentManager() {
     setDocumentos((anteriores) => anteriores.filter((item) => item.id !== id));
   }
 
+  async function validarDocumentos() {
+    if (documentos.length === 0) return;
+    setValidando(true);
+    try {
+      const atualizados = await validarTodosDocumentos(documentos);
+      setDocumentos(atualizados);
+    } finally {
+      setValidando(false);
+    }
+  }
+
+  function exportarCSV() {
+    exportarComoCSV(documentos);
+  }
+
+  function exportarJSON() {
+    exportarComoJSON(documentos);
+  }
+
+  function exportarXLSX() {
+    exportarComoXLSX(documentos);
+  }
+
   return {
     documentos,
     carregandoId,
+    validando,
     adicionarArquivos,
     converter,
     baixar,
     remover,
+    validarDocumentos,
+    exportarCSV,
+    exportarJSON,
+    exportarXLSX,
   };
 }

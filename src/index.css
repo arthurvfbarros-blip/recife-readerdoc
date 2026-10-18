@@ -190,3 +190,323 @@ button.icone {
     margin-left: 40px;
   }
 }
+
+/* --- Ações da Lista Principal --- */
+.acoes-lista {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.btn-acao {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.btn-acao:hover:not(:disabled) {
+  background: #064482;
+  transform: translateY(-1px);
+}
+
+.btn-acao.secundario {
+  background: #eaf2fb;
+  color: #0756a4;
+  border: 1px solid #c2dbf7;
+}
+
+.btn-acao.secundario:hover:not(:disabled) {
+  background: #d5e6f8;
+}
+
+/* --- Tela de Exportação (Página 3 do PDF) --- */
+.export-container {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: #f3f6fa;
+}
+
+.export-card {
+  position: relative;
+  width: 100%;
+  max-width: 760px;
+  background: #ffffff;
+  border: 4px solid #160e52;
+  border-radius: 28px;
+  padding: 48px 40px 32px;
+  box-shadow: 0 10px 30px rgba(22, 14, 82, 0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.botao-voltar-topo {
+  position: absolute;
+  top: 20px;
+  left: 24px;
+  background: transparent;
+  color: #160e52;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  font-weight: 600;
+  font-size: 14px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+}
+
+.botao-voltar-topo:hover {
+  background: #f0f2f8;
+}
+
+.export-title {
+  font-size: clamp(32px, 5vw, 48px);
+  font-weight: 800;
+  color: #000000;
+  margin: 12px 0 36px;
+  text-align: center;
+}
+
+.aviso-vazio {
+  color: #718096;
+  font-size: 15px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.export-options {
+  width: 100%;
+  max-width: 280px;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+}
+
+.export-option-btn {
+  width: 100%;
+  background: #ffffff;
+  color: #000000;
+  border: 2px solid #000000;
+  font-size: 24px;
+  font-weight: 600;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: background 0.15s;
+}
+
+.export-option-btn:hover:not(:disabled) {
+  background: #f3f6fa;
+}
+
+.export-option-btn.top {
+  border-top-left-radius: 18px;
+  border-top-right-radius: 18px;
+  border-bottom: 1px solid #000000;
+}
+
+.export-option-btn.middle {
+  border-radius: 0;
+  border-top: 1px solid #000000;
+  border-bottom: 1px solid #000000;
+}
+
+.export-option-btn.bottom {
+  border-bottom-left-radius: 18px;
+  border-bottom-right-radius: 18px;
+  border-top: 1px solid #000000;
+}
+
+.export-icon {
+  position: absolute;
+  right: 18px;
+  color: #160e52;
+}
+
+.export-footer {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 56px;
+}
+
+.link-validar-docs {
+  background: transparent;
+  color: #0056b3;
+  font-size: 19px;
+  font-weight: 700;
+  padding: 8px 14px;
+  border-radius: 6px;
+}
+
+.link-validar-docs:hover {
+  text-decoration: underline;
+  background: #f0f6ff;
+}
+
+/* --- Tela de Validação (Página 4 do PDF) --- */
+.validacao-screen {
+  min-height: 100vh;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+}
+
+.validacao-topbar {
+  background: #160e52;
+  color: #ffffff;
+  padding: 22px 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.validacao-back-btn {
+  background: transparent;
+  color: #ffffff;
+  border: 0;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.validacao-back-btn:hover {
+  opacity: 0.8;
+}
+
+.validacao-title {
+  margin: 0;
+  font-size: clamp(24px, 4vw, 36px);
+  font-weight: 700;
+}
+
+.validacao-content {
+  flex: 1;
+  padding: 60px 24px;
+  max-width: 1080px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.validacao-loading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #160e52;
+  font-weight: 600;
+  font-size: 16px;
+  margin-bottom: 24px;
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.validacao-vazio {
+  text-align: center;
+  color: #64748b;
+  margin-top: 40px;
+}
+
+.btn-voltar-home {
+  margin-top: 16px;
+  background: #160e52;
+}
+
+.validacao-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 36px;
+  margin-top: 20px;
+  width: 100%;
+}
+
+.ficheiro-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.ficheiro-card {
+  width: 160px;
+  height: 160px;
+  background: #1d155f;
+  border-radius: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 24px rgba(29, 21, 95, 0.2);
+  transition: transform 0.2s;
+}
+
+.ficheiro-card:hover {
+  transform: translateY(-4px);
+}
+
+.status-badge-circulo {
+  width: 86px;
+  height: 86px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.badge-verde {
+  border: 4px solid #00aa44;
+  color: #00aa44;
+}
+
+.badge-vermelho {
+  border: 4px solid #e50914;
+  color: #e50914;
+}
+
+.ficheiro-nome {
+  font-size: 20px;
+  font-weight: 500;
+  color: #000000;
+  text-align: center;
+}
+
+.mensagem-invalido {
+  margin-top: 72px;
+  color: #ff0000;
+  font-size: clamp(20px, 3.5vw, 30px);
+  font-weight: 500;
+  text-align: center;
+}
+
+.mensagem-valido {
+  margin-top: 72px;
+  color: #00aa44;
+  font-size: clamp(20px, 3.5vw, 28px);
+  font-weight: 500;
+  text-align: center;
+}
