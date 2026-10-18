@@ -7,6 +7,7 @@ import {
   exportarComoCSV,
   exportarComoJSON,
   exportarComoXLSX,
+  extrairDados,
 } from "../services";
 
 export function useDocumentManager() {
@@ -31,8 +32,10 @@ export function useDocumentManager() {
     setDocumentos((anteriores) => [...anteriores, ...novos]);
   }
 
-  async function converter(documento: Documento) {
-    if (documento.status === "Formato não suportado") return;
+  /** Converte o documento e extrai o conteúdo real. Retorna true se deu certo. */
+  async function converter(documento: Documento): Promise<boolean> {
+    if (documento.status === "Formato não suportado") return false;
+    if (documento.status === "Convertido com sucesso" && documento.dados) return true; // já convertido
 
     setCarregandoId(documento.id);
 
@@ -47,21 +50,25 @@ export function useDocumentManager() {
         throw new Error("Formato não suportado.");
       }
 
+      // Req 2: lê o conteúdo do documento (texto do PDF ou OCR da imagem)
+      const dados = await extrairDados(documento.arquivo);
+
       setDocumentos((anteriores) =>
         anteriores.map((item) =>
           item.id === documento.id
-            ? { ...item, pdf: pdfBlob, status: "Convertido com sucesso" }
+            ? { ...item, pdf: pdfBlob, dados, status: "Convertido com sucesso" }
             : item
         )
       );
-    } catch {
+      return true;
+    } catch (erro) {
+      console.error("Falha na conversão:", erro);
       setDocumentos((anteriores) =>
         anteriores.map((item) =>
-          item.id === documento.id
-            ? { ...item, status: "Erro na conversão" }
-            : item
+          item.id === documento.id ? { ...item, status: "Erro na conversão" } : item
         )
       );
+      return false;
     } finally {
       setCarregandoId(null);
     }
