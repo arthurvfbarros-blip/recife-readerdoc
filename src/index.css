@@ -17,6 +17,9 @@ button, input {
   font: inherit;
 }
 
+/* ============================================================
+   HEADER / TOPBAR
+   ============================================================ */
 .topbar {
   display: flex;
   justify-content: space-between;
@@ -50,6 +53,9 @@ button, input {
   border-radius: 20px;
 }
 
+/* ============================================================
+   HERO
+   ============================================================ */
 .hero {
   background: #0756a4;
   color: white;
@@ -75,6 +81,37 @@ button, input {
   letter-spacing: 2px;
 }
 
+/* Botão Converter no Hero */
+.hero-btn-converter {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 28px;
+  padding: 14px 36px;
+  background: #ffdc69;
+  color: #0d2d5e;
+  font-size: 16px;
+  font-weight: 700;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+}
+
+.hero-btn-converter:hover {
+  background: #ffd035;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 22px rgba(0,0,0,0.22);
+}
+
+.hero-btn-converter:active {
+  transform: translateY(0);
+}
+
+/* ============================================================
+   PAINEL PRINCIPAL
+   ============================================================ */
 .painel, .rodape-info {
   max-width: 1000px;
   margin: 28px auto;
@@ -97,6 +134,12 @@ button, input {
   color: #0756a4;
   cursor: pointer;
   background: #f7fbff;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.upload:hover {
+  border-color: #0756a4;
+  background: #eef6ff;
 }
 
 .upload input {
@@ -164,34 +207,9 @@ button.icone {
   line-height: 1.6;
 }
 
-@media (max-width: 650px) {
-  .topbar {
-    padding: 18px;
-  }
-
-  .selo {
-    display: none;
-  }
-
-  .painel, .rodape-info {
-    margin: 16px 12px;
-    padding: 18px;
-  }
-
-  .documento {
-    flex-wrap: wrap;
-  }
-
-  .info {
-    flex-basis: calc(100% - 50px);
-  }
-
-  .documento button:first-of-type {
-    margin-left: 40px;
-  }
-}
-
-/* --- Ações da Lista Principal --- */
+/* ============================================================
+   AÇÕES DA LISTA PRINCIPAL
+   ============================================================ */
 .acoes-lista {
   display: flex;
   gap: 10px;
@@ -222,291 +240,643 @@ button.icone {
 
 .btn-acao.secundario:hover:not(:disabled) {
   background: #d5e6f8;
+  transform: translateY(-1px);
 }
 
-/* --- Tela de Exportação (Página 3 do PDF) --- */
-.export-container {
-  min-height: 80vh;
+/* ============================================================
+   SUB-HEADER COMPARTILHADO (ConversionView + ValidationView)
+   ============================================================ */
+.cv-subheader {
+  background: #f0f6ff;
+  border-bottom: 1px solid #c2dbf7;
+  padding: 12px max(5%, calc((100% - 1100px) / 2));
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 24px;
-  background: #f3f6fa;
+  gap: 16px;
 }
 
-.export-card {
-  position: relative;
-  width: 100%;
-  max-width: 760px;
-  background: #ffffff;
-  border: 4px solid #160e52;
-  border-radius: 28px;
-  padding: 48px 40px 32px;
-  box-shadow: 0 10px 30px rgba(22, 14, 82, 0.08);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.botao-voltar-topo {
-  position: absolute;
-  top: 20px;
-  left: 24px;
-  background: transparent;
-  color: #160e52;
+.cv-back-btn {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 6px 12px;
+  background: transparent;
+  color: #0756a4;
   font-weight: 600;
   font-size: 14px;
-  border: 1px solid transparent;
+  padding: 6px 10px;
   border-radius: 6px;
+  border: 1px solid #c2dbf7;
+  transition: background 0.2s;
 }
 
-.botao-voltar-topo:hover {
-  background: #f0f2f8;
+.cv-back-btn:hover {
+  background: #deedfb;
 }
 
-.export-title {
-  font-size: clamp(32px, 5vw, 48px);
-  font-weight: 800;
-  color: #000000;
-  margin: 12px 0 36px;
-  text-align: center;
-}
-
-.aviso-vazio {
-  color: #718096;
+.cv-subheader-title {
   font-size: 15px;
-  margin-bottom: 20px;
-  text-align: center;
-}
-
-.export-options {
-  width: 100%;
-  max-width: 280px;
-  display: flex;
-  flex-direction: column;
-  margin: 0 auto;
-}
-
-.export-option-btn {
-  width: 100%;
-  background: #ffffff;
-  color: #000000;
-  border: 2px solid #000000;
-  font-size: 24px;
   font-weight: 600;
-  padding: 16px 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  transition: background 0.15s;
+  color: #172b4d;
 }
 
-.export-option-btn:hover:not(:disabled) {
-  background: #f3f6fa;
-}
-
-.export-option-btn.top {
-  border-top-left-radius: 18px;
-  border-top-right-radius: 18px;
-  border-bottom: 1px solid #000000;
-}
-
-.export-option-btn.middle {
-  border-radius: 0;
-  border-top: 1px solid #000000;
-  border-bottom: 1px solid #000000;
-}
-
-.export-option-btn.bottom {
-  border-bottom-left-radius: 18px;
-  border-bottom-right-radius: 18px;
-  border-top: 1px solid #000000;
-}
-
-.export-icon {
-  position: absolute;
-  right: 18px;
-  color: #160e52;
-}
-
-.export-footer {
-  width: 100%;
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 56px;
-}
-
-.link-validar-docs {
-  background: transparent;
-  color: #0056b3;
-  font-size: 19px;
-  font-weight: 700;
-  padding: 8px 14px;
-  border-radius: 6px;
-}
-
-.link-validar-docs:hover {
-  text-decoration: underline;
-  background: #f0f6ff;
-}
-
-/* --- Tela de Validação (Página 4 do PDF) --- */
-.validacao-screen {
+/* ============================================================
+   TELA DE CONVERSÃO (ConversionView)
+   ============================================================ */
+.cv-screen {
   min-height: 100vh;
-  background: #ffffff;
+  background: #f3f6fa;
   display: flex;
   flex-direction: column;
 }
 
-.validacao-topbar {
-  background: #160e52;
-  color: #ffffff;
-  padding: 22px 36px;
+.cv-main {
+  max-width: 1000px;
+  width: 100%;
+  margin: 28px auto;
+  padding: 0 20px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.cv-upload {
+  margin: 0;
+}
+
+.cv-action-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  background: white;
+  padding: 14px 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px #132d4b0a;
 }
 
-.validacao-back-btn {
-  background: transparent;
-  color: #ffffff;
-  border: 0;
-  padding: 4px;
+.cv-count {
+  font-size: 14px;
+  color: #53647a;
+}
+
+.cv-btn-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 18px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  background: #0756a4;
+  color: white;
+  border: none;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.cv-btn-all:hover:not(:disabled) {
+  background: #064482;
+  transform: translateY(-1px);
+}
+
+.cv-vazio {
+  text-align: center;
+  padding: 40px 0;
+  color: #66758a;
+}
+
+.cv-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px #132d4b0d;
+  overflow: hidden;
+}
+
+.cv-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e5eaf0;
+  transition: background 0.15s;
+}
+
+.cv-item:last-child {
+  border-bottom: none;
+}
+
+.cv-item:hover {
+  background: #f7fbff;
+}
+
+.cv-item-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
-.validacao-back-btn:hover {
-  opacity: 0.8;
+.cv-icon-ok {
+  background: #e6f9ee;
+  color: #00954a;
 }
 
-.validacao-title {
-  margin: 0;
-  font-size: clamp(24px, 4vw, 36px);
-  font-weight: 700;
+.cv-icon-err {
+  background: #fde8e8;
+  color: #c0392b;
 }
 
-.validacao-content {
-  flex: 1;
-  padding: 60px 24px;
-  max-width: 1080px;
-  width: 100%;
-  margin: 0 auto;
+.cv-icon-pending {
+  background: #eaf2fb;
+  color: #0756a4;
+}
+
+.cv-item-name {
+  font-size: 15px;
+  color: #172b4d;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cv-item-status {
+  font-size: 12px;
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+.cv-status-ok   { color: #00954a; }
+.cv-status-err  { color: #c0392b; }
+.cv-status-pending { color: #0756a4; }
+
+.cv-item-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.cv-btn-convert {
+  padding: 7px 14px;
+  font-size: 13px;
+}
+
+/* ============================================================
+   TELA DE VALIDAÇÃO (ValidationView)
+   ============================================================ */
+.val-screen {
+  min-height: 100vh;
+  background: #f3f6fa;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Reutiliza .cv-main para layout */
+.val-loading {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: white;
+  border: 1px solid #c2dbf7;
+  border-radius: 10px;
+  padding: 12px 20px;
+  color: #0756a4;
+  font-weight: 600;
+  font-size: 15px;
+  align-self: flex-start;
+}
+
+.val-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 20px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.val-banner-ok {
+  background: #e6f9ee;
+  color: #00763a;
+  border: 1px solid #a0e5be;
+}
+
+.val-banner-err {
+  background: #fde8e8;
+  color: #a31515;
+  border: 1px solid #f5b8b8;
+}
+
+.val-revalidate-bar {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.val-vazio {
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 16px;
+  text-align: center;
+  margin-top: 60px;
+  color: #66758a;
 }
 
-.validacao-loading {
+.val-vazio-icon {
+  color: #0756a4;
+  opacity: 0.4;
+}
+
+.val-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 24px;
+}
+
+.val-card {
+  background: white;
+  border-radius: 14px;
+  padding: 24px 16px 20px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   gap: 12px;
-  color: #160e52;
-  font-weight: 600;
-  font-size: 16px;
-  margin-bottom: 24px;
+  box-shadow: 0 2px 12px #132d4b0a;
+  border: 2px solid transparent;
+  position: relative;
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: default;
 }
 
+.val-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px #132d4b18;
+}
+
+.val-card-ok  { border-color: #a0e5be; }
+.val-card-err { border-color: #f5b8b8; }
+.val-card-pending { border-color: #c2dbf7; }
+
+.val-badge {
+  position: absolute;
+  top: -14px;
+  right: -10px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.val-badge-ok      { background: #00aa44; color: white; }
+.val-badge-err     { background: #e50914; color: white; }
+.val-badge-pending { background: #0756a4; color: white; }
+
+.val-card-nome {
+  font-size: 12px;
+  font-weight: 600;
+  color: #172b4d;
+  text-align: center;
+  word-break: break-all;
+  width: 100%;
+}
+
+.val-card-motivo {
+  font-size: 11px;
+  color: #a31515;
+  text-align: center;
+  background: #fde8e8;
+  border-radius: 6px;
+  padding: 4px 8px;
+  width: 100%;
+}
+
+/* ============================================================
+   SPINNER
+   ============================================================ */
 .spinner {
   animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
 }
 
-.validacao-vazio {
-  text-align: center;
-  color: #64748b;
-  margin-top: 40px;
-}
-
-.btn-voltar-home {
-  margin-top: 16px;
-  background: #160e52;
-}
-
-.validacao-grid {
+/* ============================================================
+   BOTÃO VALIDAR NO FINAL DA HOME
+   ============================================================ */
+.home-validar-wrapper {
+  max-width: 1000px;
+  margin: 0 auto 8px;
+  padding: 0 28px;
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
-  gap: 36px;
-  margin-top: 20px;
-  width: 100%;
 }
 
-.ficheiro-item {
+.home-validar-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 32px;
+  background: #0756a4;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+  box-shadow: 0 4px 14px rgba(7, 86, 164, 0.25);
+}
+
+.home-validar-btn:hover:not(:disabled) {
+  background: #064482;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(7, 86, 164, 0.32);
+}
+
+.home-validar-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ============================================================
+   TELA DE EXPORTAÇÃO (ExportView)
+   ============================================================ */
+.exp-screen {
+  min-height: 100vh;
+  background: #f3f6fa;
+  display: flex;
+  flex-direction: column;
+}
+
+.exp-main {
+  max-width: 860px;
+  width: 100%;
+  margin: 36px auto;
+  padding: 0 24px 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.exp-aviso {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #fff8e6;
+  border: 1px solid #f5d98a;
+  color: #7a4a00;
+  border-radius: 10px;
+  padding: 14px 18px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.exp-heading h2 {
+  font-size: clamp(22px, 4vw, 30px);
+  font-weight: 700;
+  color: #172b4d;
+  margin: 0 0 8px;
+}
+
+.exp-heading p {
+  color: #66758a;
+  font-size: 15px;
+  margin: 0;
+}
+
+.exp-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.exp-card {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
+  padding: 32px 20px;
+  background: var(--exp-bg);
+  border: 2px solid var(--exp-border);
+  border-radius: 16px;
+  color: var(--exp-color);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
 }
 
-.ficheiro-card {
-  width: 160px;
-  height: 160px;
-  background: #1d155f;
-  border-radius: 26px;
+.exp-card:hover:not(:disabled) {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+}
+
+.exp-card:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  filter: grayscale(0.4);
+}
+
+.exp-card-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 14px;
+  background: white;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 10px 24px rgba(29, 21, 95, 0.2);
-  transition: transform 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
-.ficheiro-card:hover {
-  transform: translateY(-4px);
+.exp-card-label {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 1px;
 }
 
-.status-badge-circulo {
-  width: 86px;
-  height: 86px;
-  border-radius: 50%;
+.exp-card-desc {
+  font-size: 13px;
+  text-align: center;
+  opacity: 0.85;
+}
+
+.exp-footer {
+  display: flex;
+  justify-content: center;
+  border-top: 1px solid #e5eaf0;
+  padding-top: 24px;
+}
+
+.exp-validar-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  color: #0756a4;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 10px 18px;
+  border-radius: 8px;
+  border: 1px solid #c2dbf7;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.exp-validar-btn:hover {
+  background: #eaf2fb;
+  transform: translateY(-1px);
+}
+
+/* Req 2: aviso info (documentos pendentes) */
+.exp-aviso-info {
+  background: #eaf2fb;
+  border-color: #c2dbf7;
+  color: #0756a4;
+}
+
+/* Req 2: lista de arquivos prontos para exportar */
+.exp-resumo {
+  background: white;
+  border-radius: 10px;
+  border: 1px solid #e5eaf0;
+  overflow: hidden;
+}
+
+.exp-resumo-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  border-bottom: 1px solid #f0f4f8;
+  font-size: 14px;
+}
+
+.exp-resumo-item:last-child {
+  border-bottom: none;
+}
+
+.exp-resumo-icon {
+  color: #00954a;
+  flex-shrink: 0;
+}
+
+.exp-resumo-nome {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #172b4d;
+  font-weight: 500;
+}
+
+.exp-resumo-status {
+  font-size: 12px;
+  color: #00954a;
+  background: #e6f9ee;
+  padding: 2px 8px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+/* Req 4: miniatura do arquivo no card de validação */
+.val-card-thumb {
+  width: 100%;
+  height: 110px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f3f6fa;
   display: flex;
   align-items: center;
   justify-content: center;
+  border: 1px solid #e5eaf0;
 }
 
-.badge-verde {
-  border: 4px solid #00aa44;
-  color: #00aa44;
+.val-card-thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-.badge-vermelho {
-  border: 4px solid #e50914;
-  color: #e50914;
+.val-card-thumb-pdf {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  color: #0756a4;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  opacity: 0.7;
 }
 
-.ficheiro-nome {
-  font-size: 20px;
-  font-weight: 500;
-  color: #000000;
-  text-align: center;
-}
+/* ============================================================
+   RESPONSIVO
+   ============================================================ */
+@media (max-width: 650px) {
+  .topbar {
+    padding: 18px;
+  }
 
-.mensagem-invalido {
-  margin-top: 72px;
-  color: #ff0000;
-  font-size: clamp(20px, 3.5vw, 30px);
-  font-weight: 500;
-  text-align: center;
-}
+  .selo {
+    display: none;
+  }
 
-.mensagem-valido {
-  margin-top: 72px;
-  color: #00aa44;
-  font-size: clamp(20px, 3.5vw, 28px);
-  font-weight: 500;
-  text-align: center;
+  .painel, .rodape-info {
+    margin: 16px 12px;
+    padding: 18px;
+  }
+
+  .documento {
+    flex-wrap: wrap;
+  }
+
+  .info {
+    flex-basis: calc(100% - 50px);
+  }
+
+  .documento button:first-of-type {
+    margin-left: 40px;
+  }
+
+  .cv-main {
+    padding: 0 12px 32px;
+    margin: 16px auto;
+  }
+
+  .cv-action-bar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .cv-item {
+    flex-wrap: wrap;
+  }
+
+  .cv-item-actions {
+    margin-left: 56px;
+    flex-basis: 100%;
+  }
+
+  .val-list {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  }
+
+  .exp-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .home-validar-wrapper {
+    padding: 0 12px;
+  }
 }

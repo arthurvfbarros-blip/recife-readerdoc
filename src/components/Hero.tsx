@@ -1,10 +1,10 @@
 export function Hero() {
   return (
     <section className="hero">
-      <p className="subtitulo">DOCUMENTOS EM UM SÓ LUGAR</p>
-      <h2>Digitalize. Organize. Simplifique.</h2>
+      <p className="subtitulo">GESTÃO INTELIGENTE DE DOCUMENTOS</p>
+      <h2>Converta. Exporte. Organize.</h2>
       <p>
-        Transforme imagens e documentos digitais em PDFs prontos para armazenar e compartilhar.
+        Transforme imagens e PDFs em planilhas CSV, JSON ou XLSX — tudo em um só lugar, de forma rápida e segura.
       </p>
     </section>
   );

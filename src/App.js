@@ -1,10 +1,9 @@
 import { useState } from "react";
-import { Download, ShieldCheck } from "lucide-react";
+import { ShieldCheck } from "lucide-react";
 import { Header } from "./components/Header";
 import { Hero } from "./components/Hero";
 import { FileUpload } from "./components/FileUpload";
 import { DocumentItem } from "./components/DocumentItem";
-import { FooterInfo } from "./components/FooterInfo";
 import { ExportView } from "./components/ExportView";
 import { ValidationView } from "./components/ValidationView";
 import { useDocumentManager } from "./hooks/useDocumentManager";
@@ -27,6 +26,12 @@ export default function App() {
     exportarXLSX,
   } = useDocumentManager();
 
+  // Req 1: Converte o documento e, ao terminar, navega para a tela de exportação
+  async function handleConvert(doc) {
+    await converter(doc);
+    setCurrentView("export");
+  }
+
   if (currentView === "export") {
     return (
       <main className="app">
@@ -39,7 +44,7 @@ export default function App() {
           onExportCSV={exportarCSV}
           onExportJSON={exportarJSON}
           onExportXLSX={exportarXLSX}
-          documentCount={documentos.length}
+          documentos={documentos}
         />
       </main>
     );
@@ -74,33 +79,6 @@ export default function App() {
             <h3>Meus documentos</h3>
             <span>{documentos.length} arquivo(s)</span>
           </div>
-
-          {documentos.length > 0 && (
-            <div className="acoes-lista">
-              <button
-                type="button"
-                className="btn-acao secundario"
-                onClick={() => setCurrentView("export")}
-                title="Ir para tela de exportação"
-              >
-                <Download size={16} />
-                Exportar
-              </button>
-
-              <button
-                type="button"
-                className="btn-acao"
-                onClick={() => {
-                  validarDocumentos();
-                  setCurrentView("validation");
-                }}
-                title="Validar integridade dos documentos"
-              >
-                <ShieldCheck size={16} />
-                Validar documentos
-              </button>
-            </div>
-          )}
         </div>
 
         {documentos.map((doc) => (
@@ -108,7 +86,7 @@ export default function App() {
             key={doc.id}
             documento={doc}
             isConverting={carregandoId === doc.id}
-            onConvert={converter}
+            onConvert={handleConvert}
             onDownload={baixar}
             onRemove={remover}
           />
@@ -119,7 +97,28 @@ export default function App() {
         )}
       </section>
 
-      <FooterInfo />
+      {/* Req: Botão de validação no final da tela (sem o card FooterInfo abaixo) */}
+      <div className="home-validar-wrapper">
+        <button
+          type="button"
+          className="home-validar-btn"
+          onClick={() => {
+            validarDocumentos();
+            setCurrentView("validation");
+          }}
+          disabled={documentos.length === 0}
+          title={
+            documentos.length === 0
+              ? "Adicione documentos para validar"
+              : "Validar integridade dos documentos"
+          }
+        >
+          <ShieldCheck size={20} />
+          Validar documentos
+        </button>
+      </div>
+
+      {/* Req 3: FooterInfo (card) removido */}
     </main>
   );
 }

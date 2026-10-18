@@ -24,13 +24,24 @@ function formatarTamanho(bytes: number): string {
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${tamanhos[i]}`;
 }
 
+/** Filtra apenas documentos convertidos ou já prontos em PDF */
+function filtrarProntos(documentos: Documento[]): Documento[] {
+  return documentos.filter(
+    (doc) => doc.status === "Convertido com sucesso" || doc.status === "PDF pronto"
+  );
+}
+
 /**
  * Exporta a lista de documentos para o formato CSV.
+ * Req 2: inclui apenas documentos convertidos.
  */
 export function exportarComoCSV(documentos: Documento[]): void {
+  const prontos = filtrarProntos(documentos);
+  if (prontos.length === 0) return;
+
   const cabecalhos = ["Nome do Arquivo", "Tipo", "Tamanho", "Status", "Validação", "Detalhes"];
 
-  const linhas = documentos.map((doc) => {
+  const linhas = prontos.map((doc) => {
     const validacaoTexto =
       doc.validacao !== undefined
         ? doc.validacao.valido
@@ -55,9 +66,13 @@ export function exportarComoCSV(documentos: Documento[]): void {
 
 /**
  * Exporta a lista de documentos para o formato JSON.
+ * Req 2: inclui apenas documentos convertidos.
  */
 export function exportarComoJSON(documentos: Documento[]): void {
-  const dados = documentos.map((doc) => ({
+  const prontos = filtrarProntos(documentos);
+  if (prontos.length === 0) return;
+
+  const dados = prontos.map((doc) => ({
     id: doc.id,
     nome: doc.nome,
     tipoMime: doc.arquivo.type || "desconhecido",
@@ -81,9 +96,13 @@ export function exportarComoJSON(documentos: Documento[]): void {
 
 /**
  * Exporta a lista de documentos para uma planilha Excel (XLSX).
+ * Req 2: inclui apenas documentos convertidos.
  */
 export function exportarComoXLSX(documentos: Documento[]): void {
-  const dadosPlanilha = documentos.map((doc, index) => ({
+  const prontos = filtrarProntos(documentos);
+  if (prontos.length === 0) return;
+
+  const dadosPlanilha = prontos.map((doc, index) => ({
     Item: index + 1,
     "Nome do Arquivo": doc.nome,
     "Tipo de Arquivo": doc.arquivo.type || "Desconhecido",

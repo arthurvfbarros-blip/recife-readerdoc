@@ -1,5 +1,12 @@
-import React, { useEffect } from "react";
-import { ArrowLeft, Check, X, RefreshCw } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import {
+  ArrowLeft,
+  FileText,
+  Check,
+  X,
+  RefreshCw,
+  ShieldCheck,
+} from "lucide-react";
 import { Documento } from "../types/documento";
 
 interface ValidationViewProps {
@@ -7,6 +14,94 @@ interface ValidationViewProps {
   validando: boolean;
   onValidate: () => Promise<void>;
   onBack: () => void;
+}
+
+/** Req 4: Gera URL de preview para imagens; retorna null para PDFs */
+function usePreviewUrl(arquivo: File): string | null {
+  const [url, setUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!arquivo.type.startsWith("image/")) {
+      setUrl(null);
+      return;
+    }
+    const objectUrl = URL.createObjectURL(arquivo);
+    setUrl(objectUrl);
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [arquivo]);
+
+  return url;
+}
+
+/** Card individual de documento na grade de validação */
+function ValCard({
+  doc,
+  validando,
+}: {
+  doc: Documento;
+  validando: boolean;
+}) {
+  const previewUrl = usePreviewUrl(doc.arquivo);
+  const pendente = doc.validacao === undefined;
+  const ehValido = doc.validacao?.valido ?? true;
+
+  return (
+    <div
+      className={`val-card ${
+        pendente
+          ? "val-card-pending"
+          : ehValido
+          ? "val-card-ok"
+          : "val-card-err"
+      }`}
+      title={doc.validacao?.motivo || doc.nome}
+    >
+      {/* Badge de status */}
+      <div
+        className={`val-badge ${
+          pendente
+            ? "val-badge-pending"
+            : ehValido
+            ? "val-badge-ok"
+            : "val-badge-err"
+        }`}
+      >
+        {pendente ? (
+          <RefreshCw size={16} className={validando ? "spinner" : ""} />
+        ) : ehValido ? (
+          <Check size={18} strokeWidth={3} />
+        ) : (
+          <X size={18} strokeWidth={3} />
+        )}
+      </div>
+
+      {/* Req 4: Miniatura real da imagem ou ícone PDF */}
+      <div className="val-card-thumb">
+        {previewUrl ? (
+          <img
+            src={previewUrl}
+            alt={doc.nome}
+            className="val-card-thumb-img"
+          />
+        ) : (
+          <div className="val-card-thumb-pdf">
+            <FileText size={36} />
+            <span>PDF</span>
+          </div>
+        )}
+      </div>
+
+      {/* Req 4: Nome real do arquivo */}
+      <span className="val-card-nome" title={doc.nome}>
+        {doc.nome}
+      </span>
+
+      {/* Motivo (se inválido) */}
+      {doc.validacao && !doc.validacao.valido && doc.validacao.motivo && (
+        <span className="val-card-motivo">{doc.validacao.motivo}</span>
+      )}
+    </div>
+  );
 }
 
 export function ValidationView({
@@ -24,78 +119,100 @@ export function ValidationView({
   }, [documentos, validando, onValidate]);
 
   const temInvalido = documentos.some((doc) => doc.validacao && !doc.validacao.valido);
-  const todosValidados = documentos.length > 0 && documentos.every((doc) => doc.validacao !== undefined);
+  const todosValidados =
+    documentos.length > 0 && documentos.every((doc) => doc.validacao !== undefined);
 
   return (
-    <div className="validacao-screen">
-      <header className="validacao-topbar">
-        <button
-          type="button"
-          className="validacao-back-btn"
-          onClick={onBack}
-          aria-label="Voltar"
-        >
-          <ArrowLeft size={32} />
-        </button>
-        <h1 className="validacao-title">Recife ReaderDoc</h1>
+    <div className="val-screen">
+      {/* Header — mesmo da home */}
+      <header className="topbar">
+        <div className="marca">
+          <FileText size={32} />
+          <div>
+            <h1>Recife ReaderDoc</h1>
+            <p>Converta e exporte documentos para planilhas</p>
+          </div>
+        </div>
+        <span className="selo">Plataforma digital</span>
       </header>
 
-      <main className="validacao-content">
-        {validando && (
-          <div className="validacao-loading">
-            <RefreshCw className="spinner" size={32} />
-            <p>Validando integridade dos documentos...</p>
-          </div>
-        )}
+      {/* Sub-header / breadcrumb */}
+      <div className="cv-subheader">
+        <button
+          type="button"
+          className="cv-back-btn"
+          onClick={onBack}
+          aria-label="Voltar para início"
+        >
+          <ArrowLeft size={18} />
+          Início
+        </button>
+        <span className="cv-subheader-title">Validação de documentos</span>
+      </div>
 
+      {/* Main */}
+      <main className="cv-main">
+        {/* Estado: sem documentos */}
         {documentos.length === 0 ? (
-          <div className="validacao-vazio">
-            <p>Nenhum documento para validar. Insira documentos na página inicial.</p>
-            <button type="button" onClick={onBack} className="btn-voltar-home">
+          <div className="val-vazio">
+            <ShieldCheck size={52} strokeWidth={1.5} className="val-vazio-icon" />
+            <p>Nenhum documento para validar.</p>
+            <button type="button" className="btn-acao" onClick={onBack}>
               Inserir documentos
             </button>
           </div>
         ) : (
-          <div className="validacao-grid">
-            {documentos.map((doc, index) => {
-              const ehValido = doc.validacao?.valido ?? true;
-              const nomeExibicao = doc.nome || `Ficheiro ${index + 1}`;
+          <>
+            {/* Loading */}
+            {validando && (
+              <div className="val-loading">
+                <RefreshCw className="spinner" size={22} />
+                <span>Validando integridade dos documentos...</span>
+              </div>
+            )}
 
-              return (
-                <div key={doc.id} className="ficheiro-item">
-                  <div
-                    className={`ficheiro-card ${ehValido ? "valido" : "invalido"}`}
-                    title={doc.validacao?.motivo || doc.nome}
-                  >
-                    <div className={`status-badge-circulo ${ehValido ? "badge-verde" : "badge-vermelho"}`}>
-                      {ehValido ? (
-                        <Check size={42} strokeWidth={3.5} />
-                      ) : (
-                        <X size={42} strokeWidth={3.5} />
-                      )}
-                    </div>
-                  </div>
-                  <span className="ficheiro-nome" title={doc.nome}>
-                    {nomeExibicao.length > 20
-                      ? `Ficheiro ${index + 1}`
-                      : nomeExibicao}
-                  </span>
-                </div>
-              );
-            })}
-          </div>
-        )}
+            {/* Status banner */}
+            {todosValidados && (
+              <div
+                className={`val-banner ${
+                  temInvalido ? "val-banner-err" : "val-banner-ok"
+                }`}
+              >
+                {temInvalido ? (
+                  <>
+                    <X size={20} strokeWidth={3} />
+                    Atenção: há documento(s) com inconsistências.
+                  </>
+                ) : (
+                  <>
+                    <Check size={20} strokeWidth={3} />
+                    Todos os documentos foram validados com sucesso!
+                  </>
+                )}
+              </div>
+            )}
 
-        {todosValidados && temInvalido && (
-          <p className="mensagem-invalido">
-            Documento inválido, informações incorretas
-          </p>
-        )}
+            {/* Revalidate button */}
+            {!validando && (
+              <div className="val-revalidate-bar">
+                <button
+                  type="button"
+                  className="btn-acao secundario"
+                  onClick={onValidate}
+                >
+                  <RefreshCw size={15} />
+                  Revalidar
+                </button>
+              </div>
+            )}
 
-        {todosValidados && !temInvalido && (
-          <p className="mensagem-valido">
-            Todos os documentos foram validados com sucesso!
-          </p>
+            {/* Document grid — Req 4: miniatura + nome real */}
+            <div className="val-list">
+              {documentos.map((doc) => (
+                <ValCard key={doc.id} doc={doc} validando={validando} />
+              ))}
+            </div>
+          </>
         )}
       </main>
     </div>
