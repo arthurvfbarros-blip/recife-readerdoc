@@ -1,6 +1,7 @@
 import React from "react";
 import {
   ArrowLeft,
+  FileText,
   FileSpreadsheet,
   Braces,
   Table2,
@@ -9,8 +10,6 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { Documento } from "../types/documento";
-import { Header } from "./Header";
-import { filtrarProntos } from "../services";
 
 interface ExportViewProps {
   onBack: () => void;
@@ -65,8 +64,11 @@ export function ExportView({
     xlsx: onExportXLSX,
   };
 
-  // Req 2: apenas documentos convertidos que têm dados extraídos
-  const prontos = filtrarProntos(documentos);
+  // Req 2: apenas documentos realmente convertidos ou já em PDF
+  const prontos = documentos.filter(
+    (doc) =>
+      doc.status === "Convertido com sucesso" || doc.status === "PDF pronto"
+  );
   const totalProntos = prontos.length;
   const totalTotal = documentos.length;
   const temPendentes = totalTotal > totalProntos;
@@ -74,7 +76,17 @@ export function ExportView({
 
   return (
     <div className="exp-screen">
-      <Header />
+      {/* Header — igual à home */}
+      <header className="topbar">
+        <div className="marca">
+          <FileText size={32} />
+          <div>
+            <h1>Recife ReaderDoc</h1>
+            <p>Converta e exporte documentos para planilhas</p>
+          </div>
+        </div>
+        <span className="selo">Plataforma digital</span>
+      </header>
 
       {/* Breadcrumb */}
       <div className="cv-subheader">

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ArrowLeft,
   FileText,
@@ -8,14 +8,29 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { Documento } from "../types/documento";
-import { Header } from "./Header";
-import { useThumbnail } from "../hooks/useThumbnail";
 
 interface ValidationViewProps {
   documentos: Documento[];
   validando: boolean;
   onValidate: () => Promise<void>;
   onBack: () => void;
+}
+
+/** Req 4: Gera URL de preview para imagens; retorna null para PDFs */
+function usePreviewUrl(arquivo: File): string | null {
+  const [url, setUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!arquivo.type.startsWith("image/")) {
+      setUrl(null);
+      return;
+    }
+    const objectUrl = URL.createObjectURL(arquivo);
+    setUrl(objectUrl);
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [arquivo]);
+
+  return url;
 }
 
 /** Card individual de documento na grade de validação */
@@ -26,7 +41,7 @@ function ValCard({
   doc: Documento;
   validando: boolean;
 }) {
-  const previewUrl = useThumbnail(doc.arquivo);
+  const previewUrl = usePreviewUrl(doc.arquivo);
   const pendente = doc.validacao === undefined;
   const ehValido = doc.validacao?.valido ?? true;
 
@@ -109,7 +124,17 @@ export function ValidationView({
 
   return (
     <div className="val-screen">
-      <Header />
+      {/* Header — mesmo da home */}
+      <header className="topbar">
+        <div className="marca">
+          <FileText size={32} />
+          <div>
+            <h1>Recife ReaderDoc</h1>
+            <p>Converta e exporte documentos para planilhas</p>
+          </div>
+        </div>
+        <span className="selo">Plataforma digital</span>
+      </header>
 
       {/* Sub-header / breadcrumb */}
       <div className="cv-subheader">
