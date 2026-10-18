@@ -63,25 +63,39 @@ function montarTabelaConteudo(prontos: Documento[]): { cabecalho: string[]; linh
   return { cabecalho, linhas };
 }
 
-/** CSV com o conteúdo extraído dos documentos (separador ";" para abrir direto no Excel pt-BR) */
-export function exportarComoCSV(documentos: Documento[]): void {
-  const prontos = filtrarProntos(documentos);
-  if (prontos.length === 0) return;
-
-  const { cabecalho, linhas } = montarTabelaConteudo(prontos);
-  const conteudo =
-    "\uFEFF" +
-    [cabecalho, ...linhas].map((l) => l.map(escaparCsv).join(";")).join("\r\n");
-
-  baixarArquivo(conteudo, "recife_readerdoc_export.csv", "text/csv;charset=utf-8;");
+/** Nome do arquivo original sem a extensão (e sem caracteres inválidos para arquivo) */
+function nomeBase(nomeOriginal: string): string {
+  const semExtensao = nomeOriginal.replace(/\.[^.]+$/, "").replace(/[\\/:*?"<>|]/g, "_").trim();
+  return semExtensao || "documento";
 }
 
-/** JSON estruturado: metadados + páginas/linhas/colunas + campos "chave: valor" */
-export function exportarComoJSON(documentos: Documento[]): void {
+/** Gera um arquivo por documento, com pequena pausa entre os downloads (o navegador pode bloquear vários seguidos) */
+async function exportarUmPorDocumento(prontos: Documento[], gerar: (doc: Documento) => void): Promise<void> {
+  for (let i = 0; i < prontos.length; i++) {
+    gerar(prontos[i]);
+    if (i < prontos.length - 1) await new Promise((r) => setTimeout(r, 400));
+  }
+}
+
+/** CSV do documento, com o mesmo nome do original (ex.: contrato.pdf → contrato.csv) */
+export async function exportarComoCSV(documentos: Documento[]): Promise<void> {
   const prontos = filtrarProntos(documentos);
   if (prontos.length === 0) return;
 
-  const dados = prontos.map((doc) => {
+  await exportarUmPorDocumento(prontos, (doc) => {
+    const { cabecalho, linhas } = montarTabelaConteudo([doc]);
+    const conteudo =
+      "\uFEFF" + [cabecalho, ...linhas].map((l) => l.map(escaparCsv).join(";")).join("\r\n");
+    baixarArquivo(conteudo, `${nomeBase(doc.nome)}.csv`, "text/csv;charset=utf-8;");
+  });
+}
+
+/** JSON do documento, com o mesmo nome do original (ex.: contrato.pdf → contrato.json) */
+export async function exportarComoJSON(documentos: Documento[]): Promise<void> {
+  const prontos = filtrarProntos(documentos);
+  if (prontos.length === 0) return;
+
+  await exportarUmPorDocumento(prontos, (doc) => {
     const d = doc.dados!;
     const paginas = Array.from({ length: d.totalPaginas }, (_, i) => i + 1).map((pagina) => ({
       pagina,
@@ -90,7 +104,7 @@ export function exportarComoJSON(documentos: Documento[]): void {
         .map((l) => ({ numero: l.numero, texto: l.texto, colunas: l.colunas })),
     }));
 
-    return {
+    const dados = {
       nome: doc.nome,
       tipoMime: doc.arquivo.type || "desconhecido",
       tamanhoBytes: doc.arquivo.size,
@@ -105,45 +119,46 @@ export function exportarComoJSON(documentos: Documento[]): void {
         paginas,
       },
     };
-  });
 
-  baixarArquivo(JSON.stringify(dados, null, 2), "recife_readerdoc_export.json", "application/json");
+    baixarArquivo(JSON.stringify(dados, null, 2), `${nomeBase(doc.nome)}.json`, "application/json");
+  });
 }
 
-/** XLSX com 3 abas: Conteúdo (linhas/colunas do documento), Campos (chave: valor) e Resumo */
-export function exportarComoXLSX(documentos: Documento[]): void {
+/** XLSX do documento, com o mesmo nome do original (ex.: contrato.pdf → contrato.xlsx) */
+export async function exportarComoXLSX(documentos: Documento[]): Promise<void> {
   const prontos = filtrarProntos(documentos);
   if (prontos.length === 0) return;
 
-  const workbook = XLSX.utils.book_new();
+  await exportarUmPorDocumento(prontos, (doc) => {
+    const workbook = XLSX.utils.book_new();
 
-  // 1ª aba: o conteúdo real extraído dos documentos (é a que o Excel abre primeiro)
-  const { cabecalho, linhas } = montarTabelaConteudo(prontos);
-  const abaConteudo = XLSX.utils.aoa_to_sheet([cabecalho, ...linhas]);
-  abaConteudo["!cols"] = cabecalho.map((_, i) => ({ wch: i === 0 ? 32 : i < 3 ? 8 : 28 }));
-  XLSX.utils.book_append_sheet(workbook, abaConteudo, "Conteúdo");
+    // 1ª aba: o conteúdo real extraído do documento (é a que o Excel abre primeiro)
+    const { cabecalho, linhas } = montarTabelaConteudo([doc]);
+    const abaConteudo = XLSX.utils.aoa_to_sheet([cabecalho, ...linhas]);
+    abaConteudo["!cols"] = cabecalho.map((_, i) => ({ wch: i === 0 ? 32 : i < 3 ? 8 : 28 }));
+    XLSX.utils.book_append_sheet(workbook, abaConteudo, "Conteúdo");
 
-  // 2ª aba: pares "Campo: Valor" detectados (só se houver)
-  const campos = prontos.flatMap((doc) =>
-    doc.dados!.campos.map((c) => ({ Documento: doc.nome, Página: c.pagina, Campo: c.campo, Valor: c.valor }))
-  );
-  if (campos.length > 0) {
-    XLSX.utils.book_append_sheet(workbook, XLSX.utils.json_to_sheet(campos), "Campos");
-  }
+    // 2ª aba: pares "Campo: Valor" detectados (só se houver)
+    const campos = doc.dados!.campos.map((c) => ({ Página: c.pagina, Campo: c.campo, Valor: c.valor }));
+    if (campos.length > 0) {
+      XLSX.utils.book_append_sheet(workbook, XLSX.utils.json_to_sheet(campos), "Campos");
+    }
 
-  // Última aba: metadados dos arquivos
-  const resumo = prontos.map((doc, i) => ({
-    Item: i + 1,
-    "Nome do Arquivo": doc.nome,
-    "Tipo de Arquivo": doc.arquivo.type || "Desconhecido",
-    Tamanho: formatarTamanho(doc.arquivo.size),
-    Páginas: doc.dados!.totalPaginas,
-    "Método de leitura": doc.dados!.origem === "ocr" ? "OCR" : "Texto do PDF",
-    "Linhas extraídas": doc.dados!.linhas.length,
-    "Status de Validação": textoValidacao(doc),
-    "Observações / Erros": doc.validacao?.motivo || "Nenhuma pendência",
-  }));
-  XLSX.utils.book_append_sheet(workbook, XLSX.utils.json_to_sheet(resumo), "Resumo");
+    // Última aba: metadados do arquivo
+    const resumo = [
+      {
+        "Nome do Arquivo": doc.nome,
+        "Tipo de Arquivo": doc.arquivo.type || "Desconhecido",
+        Tamanho: formatarTamanho(doc.arquivo.size),
+        Páginas: doc.dados!.totalPaginas,
+        "Método de leitura": doc.dados!.origem === "ocr" ? "OCR" : "Texto do PDF",
+        "Linhas extraídas": doc.dados!.linhas.length,
+        "Status de Validação": textoValidacao(doc),
+        "Observações / Erros": doc.validacao?.motivo || "Nenhuma pendência",
+      },
+    ];
+    XLSX.utils.book_append_sheet(workbook, XLSX.utils.json_to_sheet(resumo), "Resumo");
 
-  XLSX.writeFile(workbook, "recife_readerdoc_export.xlsx");
+    XLSX.writeFile(workbook, `${nomeBase(doc.nome)}.xlsx`);
+  });
 }
