@@ -15,4 +15,8 @@ A UI do site segue princípios minimalistas para poder evitar um possível acúm
 
 #Instruções de execução
 
-1. entre em uma pasta vazia e faça um git clone
+1. entre em uma pasta vazia e faça um git clone https://github.com/arthurvfbarros-blip/recife-readerdoc.git
+
+2. entre na pasta do projeto: cd recife-readerdoc/
+
+3. no terminal digite npm start e aguarde o início da aplicação 
